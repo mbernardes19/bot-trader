@@ -43,6 +43,11 @@ export default class DerivClient {
         return currentCandle[0];
     }
 
+    async getLastCandleAgainFor(asset: string, timebox: Timebox): Promise<Candle> {
+        const currentCandle = await this.getCandles({granularity: timebox, symbol: `frx${asset}`, range: {start: subSeconds(new Date(), timebox * 2), end: new Date(), count: 2} })
+        return currentCandle[0];
+    }
+
     closeConnection() {
         try {
             this._ws.close()
