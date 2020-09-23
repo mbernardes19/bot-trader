@@ -7,10 +7,10 @@ export interface DerivResponse {
 }
 
 export interface ResponseData {
-    raw: Candle
+    raw: CandleData
 }
 
-export interface Candle {
+export interface CandleData {
     epoch: number,
     open: number,
     close: number,

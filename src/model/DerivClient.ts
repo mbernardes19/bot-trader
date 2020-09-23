@@ -1,7 +1,9 @@
 import DerivAPI from '@deriv/deriv-api';
 import WebSocket from 'ws';
-import { Candle, DerivServerResponse } from './interfaces/Candle';
+import { CandleData, DerivServerResponse } from './interfaces/Candle';
+import Candle from './Candle';
 import subSeconds from 'date-fns/subSeconds'
+import { Timebox } from './interfaces/Timebox';
 
 export type HistoryRange = {
     start: number | Date,
@@ -27,10 +29,8 @@ export default class DerivClient {
     async getCandles(candlesParam: CandlesParam): Promise<Candle[]> {
         try {
             const response = await this._derivAPI.candles(candlesParam) as DerivServerResponse;
-            console.log('RESPONSE', response)
             return response._data.list.map(responseData => {
-                console.log(responseData.raw)
-                return responseData.raw
+                return new Candle(responseData.raw, candlesParam.granularity);
             })
         } catch (err) {
             console.error(err);
@@ -38,7 +38,7 @@ export default class DerivClient {
         }
     }
 
-    async getCurrentCandleFor(asset: string, timebox: number): Promise<Candle> {
+    async getCurrentCandleFor(asset: string, timebox: Timebox): Promise<Candle> {
         const currentCandle = await this.getCandles({granularity: timebox, symbol: `frx${asset}`, range: {start: subSeconds(new Date(), timebox * 2), end: new Date(), count: 1} })
         return currentCandle[0];
     }
