@@ -7,7 +7,7 @@
     "test": "jest",
     "build": "tsc",
     "start": "rm -rf dist && tsc && NODE_ENV=production node -r dotenv/config dist/main.js",
-    "dev": "NODE_ENV=development nodemon"
+    "dev": "NODE_ENV=development ts-node ./src/main.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,11 +16,13 @@
     "@deriv/deriv-api": "^1.0.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "date-fns": "^2.16.1",
     "express": "^4.17.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.14",
     "jest": "^26.4.2",
+    "jest-mock-extended": "^1.0.10",
     "nodemon": "^2.0.4",
     "ts-jest": "^26.4.0",
     "ts-node": "^9.0.0",
