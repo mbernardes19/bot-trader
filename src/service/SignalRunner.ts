@@ -3,8 +3,8 @@ import DerivClient from "../model/DerivClient";
 import Candle from "../model/Candle";
 
 export type OperationSummary = {
-    firstCandle: Candle,
-    secondCandle: Candle,
+    candleBefore: Candle,
+    candleAfter: Candle,
     signalAction: string
 }
 
@@ -15,36 +15,38 @@ export type OperationResult = {
 
 export default class SignalRunner {
     private _derivClient: DerivClient;
+    private delay;
 
-    constructor(derivClient: DerivClient) {
+    constructor(derivClient: DerivClient, delayFunction?) {
         this._derivClient = derivClient;
+        delayFunction ?
+            this.delay = delayFunction :
+            this.delay = (n) => {
+                n = n || 2000;
+                return new Promise(done => {
+                  setTimeout(() => {
+                    done();
+                  }, n);
+                });
+            };
     }
 
     async run(signal: Signal): Promise<OperationSummary> {
-        const firstCandle = await this._derivClient.getCurrentCandleFor(signal.getAsset(), signal.getExpiration());
+        const candleBefore = await this._derivClient.getCurrentCandleFor(signal.getAsset(), signal.getExpiration());
         await this.delay(signal.getExpiration() * 1000);
-        const secondCandle = await this._derivClient.getLastCandleAgainFor(signal.getAsset(), signal.getExpiration());
-        return {firstCandle, secondCandle, signalAction: signal.getAction()};
+        const candleAfter = await this._derivClient.getLastCandleAgainFor(signal.getAsset(), signal.getExpiration());
+        return {candleBefore, candleAfter, signalAction: signal.getAction()};
     };
 
-    private delay(n) {
-        n = n || 2000;
-        return new Promise(done => {
-          setTimeout(() => {
-            done();
-          }, n);
-        });
-      }
-
     checkWin(operationSummary: OperationSummary): OperationResult {
-        const {firstCandle, secondCandle, signalAction} = operationSummary;
+        const {candleBefore, candleAfter, signalAction} = operationSummary;
 
         if (signalAction === 'PUT') {
-            return firstCandle.getOpenValue() > secondCandle.getCloseValue() ?
+            return candleBefore.getOpenValue() > candleAfter.getCloseValue() ?
                 { operationSummary, result: 'WIN' } : { operationSummary, result: 'LOSS' };
         }
         if (signalAction === 'CALL') {
-            return firstCandle.getOpenValue() < secondCandle.getCloseValue() ?
+            return candleBefore.getOpenValue() < candleAfter.getCloseValue() ?
                 { operationSummary, result: 'WIN' } : { operationSummary, result: 'LOSS' };
         }
     }

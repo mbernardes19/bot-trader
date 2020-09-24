@@ -11,7 +11,10 @@ let derivClient: DerivClient;
 const mockedWebSocket = new WebSocket() as jest.MockedClass<WebSocket>
 const mockedDerivAPI = new DerivAPI() as jest.MockedClass<DerivAPI>
 
-beforeEach(() => derivClient = new DerivClient(mockedWebSocket, mockedDerivAPI))
+beforeEach(() => {
+    derivClient = new DerivClient(mockedWebSocket, mockedDerivAPI);
+    jest.resetAllMocks();
+})
 
 describe('DerivClient', () => {
     it('should get one candle', async () => {
@@ -50,7 +53,25 @@ describe('DerivClient', () => {
         expect(candles).toHaveLength(2);
     })
 
+    it('connection should keep existing after getting candle', async () => {
+        mockedDerivAPI.candles.mockImplementation(() => getDerivServerResponse(1))
+
+        // Given
+        const candleParam: CandlesParam = {
+            granularity: 60,
+            symbol: 'frxEURUSD',
+            range: { start: new Date(), end: new Date(), count: 1}
+        }
+
+        // When
+        const candles = await derivClient.getCandles(candleParam);
+
+        // Then
+        expect(derivClient.getConnectionStatus()).toBe('active');
+    })
+
     it('should get current candle for EURUSD', async () => {
+        mockedDerivAPI.candles.mockImplementation(() => getDerivServerResponse(1))
         // Given
 
         // When
@@ -61,6 +82,7 @@ describe('DerivClient', () => {
     })
 
     it('should get last candle again for EURUSD', async () => {
+        mockedDerivAPI.candles.mockImplementation(() => getDerivServerResponse(1))
         // Given
         const currentCandle = await derivClient.getCurrentCandleFor('EURUSD', 300);
 
