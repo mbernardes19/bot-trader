@@ -1,5 +1,5 @@
 import { Timebox } from "./interfaces/Timebox";
-import { SignalData } from "./interfaces/Signal";
+import { SignalData } from "./interfaces/SignalData";
 import Logger from "../service/Logger";
 
 export default class Signal {

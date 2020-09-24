@@ -1,4 +1,4 @@
-import { CandleData } from './interfaces/Candle';
+import { CandleData } from './interfaces/CandleData';
 import { Timebox } from './interfaces/Timebox';
 
 export default class Candle {

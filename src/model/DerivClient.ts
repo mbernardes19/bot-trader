@@ -1,6 +1,6 @@
 import DerivAPI from '@deriv/deriv-api';
 import WebSocket from 'ws';
-import { DerivServerResponse } from './interfaces/Candle';
+import { DerivServerResponse } from './interfaces/CandleData';
 import Candle from './Candle';
 import subSeconds from 'date-fns/subSeconds'
 import { Timebox } from './interfaces/Timebox';

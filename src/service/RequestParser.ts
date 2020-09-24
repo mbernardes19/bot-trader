@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { SignalData } from "../model/interfaces/Signal";
+import { SignalData } from "../model/interfaces/SignalData";
 import Logger from "./Logger";
 
 export default class RequestParser {
