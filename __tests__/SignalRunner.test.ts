@@ -8,7 +8,7 @@ jest.mock('../src/model/DerivClient');
 
 let signalRunner: SignalRunner;
 const mockedDerivClient = new DerivClient() as jest.Mocked<DerivClient>
-const mockedDelayFunction = (n) => setTimeout(() => jest.fn(), n)
+const mockedDelayFunction = (n) => {setTimeout(() => jest.fn(), n)}
 
 jest.useFakeTimers();
 

@@ -1,5 +1,6 @@
 import { Timebox } from "./interfaces/Timebox";
 import { SignalData } from "./interfaces/Signal";
+import Logger from "../service/Logger";
 
 export default class Signal {
     private time: Date;
@@ -10,8 +11,13 @@ export default class Signal {
     constructor(signalData: SignalData) {
         this.asset = signalData.asset;
         this.action = signalData.action;
-        this.expiration = this.expirationToTimebox(signalData.expiration);
-        this.time = this.timeStringToDate(signalData.time);
+        try {
+            this.expiration = this.expirationToTimebox(signalData.expiration);
+            this.time = this.timeStringToDate(signalData.time);
+        } catch (err) {
+            Logger.error(`Error while creating Signal from SignalData ${signalData}`, err);
+            throw new Error(`Error while creating Signal from SignalData ${signalData}`);
+        }
     }
 
     private timeStringToDate(timeString: string) {
@@ -38,7 +44,7 @@ export default class Signal {
             case 30:
                 return Timebox.M30;
             default:
-                throw new Error('Expiration valid not supported');
+                throw new Error('Expiration time not supported');
         }
     }
 

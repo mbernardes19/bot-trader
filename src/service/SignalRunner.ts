@@ -1,6 +1,7 @@
 import Signal from "../model/Signal";
 import DerivClient from "../model/DerivClient";
 import Candle from "../model/Candle";
+import Logger from './Logger';
 
 export type OperationSummary = {
     candleBefore: Candle,
@@ -17,7 +18,7 @@ export default class SignalRunner {
     private _derivClient: DerivClient;
     private delay;
 
-    constructor(derivClient: DerivClient, delayFunction?) {
+    constructor(derivClient: DerivClient, delayFunction?: (n) => void) {
         this._derivClient = derivClient;
         delayFunction ?
             this.delay = delayFunction :
@@ -32,10 +33,15 @@ export default class SignalRunner {
     }
 
     async run(signal: Signal): Promise<OperationSummary> {
-        const candleBefore = await this._derivClient.getCurrentCandleFor(signal.getAsset(), signal.getExpiration());
-        await this.delay(signal.getExpiration() * 1000);
-        const candleAfter = await this._derivClient.getLastCandleAgainFor(signal.getAsset(), signal.getExpiration());
-        return {candleBefore, candleAfter, signalAction: signal.getAction()};
+        try {
+            const candleBefore = await this._derivClient.getCurrentCandleFor(signal.getAsset(), signal.getExpiration());
+            await this.delay(signal.getExpiration() * 1000);
+            const candleAfter = await this._derivClient.getLastCandleAgainFor(signal.getAsset(), signal.getExpiration());
+            return {candleBefore, candleAfter, signalAction: signal.getAction()};
+        } catch (err) {
+            Logger.error(`Error while running signal ${signal}`, err);
+            throw new Error(`Error while running signal ${signal}`)
+        }
     };
 
     checkWin(operationSummary: OperationSummary): OperationResult {
