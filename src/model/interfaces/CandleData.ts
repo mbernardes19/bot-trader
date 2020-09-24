@@ -3,7 +3,8 @@ export interface DerivServerResponse {
 }
 
 export interface DerivResponse {
-    list: ResponseData[]
+    list?: ResponseData[]
+    is_open?: number
 }
 
 export interface ResponseData {

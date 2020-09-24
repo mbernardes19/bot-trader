@@ -29,7 +29,7 @@ export default class Signal {
     }
 
     private checkAction(action: string) {
-        if (action.toLowerCase() !== 'PUT'.toLowerCase() || action.toLowerCase() !== 'CALL'.toLowerCase()) {
+        if (action.toLowerCase() !== 'PUT'.toLowerCase() && action.toLowerCase() !== 'CALL'.toLowerCase()) {
             throw new Error(`Invalid action for SignalData`);
         }
     }

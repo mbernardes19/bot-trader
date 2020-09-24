@@ -67,6 +67,11 @@ export default class DerivClient extends TradingClient {
         return currentCandle[0];
     }
 
+    async checkAssetAvailability(asset: string): Promise<boolean> {
+        const response = await this._derivAPI.underlying('frx'+asset) as DerivServerResponse
+        return response._data.is_open === 1 ? true : false
+    }
+
     closeConnection() {
         Logger.info(`Closing websocket connection`);
         try {
