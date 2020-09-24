@@ -1,12 +1,13 @@
-import DerivClient from './model/DerivClient';
+import dotenv from 'dotenv';
+dotenv.config();
 import express, {Request, Response} from 'express';
 import Signal from './model/Signal';
 import bodyParser from 'body-parser';
-import SignalRunner from './model/SignalRunner';
 import CacheService from './service/CacheService';
 import RequestService from './service/RequestService';
 import Logger from './service/Logger';
 import RequestParser from './service/RequestParser';
+import TradingManager from './model/TradingManager';
 
 const app = express();
 app.use(bodyParser.json())
@@ -28,16 +29,13 @@ app.post('/check-signal', (req: Request, res: Response) => {
     res.status(200).send();
 
     (async () => {
-        const derivClient = new DerivClient();
-        const signalRunner = new SignalRunner(derivClient);
+        const tradingManager = new TradingManager()
         try {
-            const operationSummary = await signalRunner.run(signal);
-            const operationResult = signalRunner.checkWin(operationSummary)
+            const operationResult = await tradingManager.runSignal(signal);
             Logger.info(`Operation result:`, operationResult);
             cacheService.storeOperationResult(operationResult);
             Logger.info(`Sending operation result to Telegram Bot:`, operationResult);
             await requestService.post('/operation-result', operationResult);
-            derivClient.closeConnection();
             Logger.info(`Operation result sent and websocket connection closed`);
         } catch (err) {
             Logger.error(`An error occurred while checking signal ${JSON.stringify(req.body)}`, err)
