@@ -52,12 +52,26 @@ export default class SignalRunner {
         const {candleBefore, candleAfter, signalAction} = operationSummary;
 
         if (signalAction === 'PUT') {
-            return candleBefore.getOpenValue() > candleAfter.getCloseValue() ?
-                { operationSummary, result: 'WIN' } : { operationSummary, result: 'LOSS' };
+            if (candleBefore.getOpenValue() > candleAfter.getCloseValue()) {
+                return { operationSummary, result: 'WIN' };
+            }
+            if (candleBefore.getOpenValue() < candleAfter.getCloseValue()) {
+                return { operationSummary, result: 'LOSS' };
+            }
+            if (candleBefore.getOpenValue() === candleAfter.getCloseValue()) {
+                return { operationSummary, result: 'DOJI' };
+            }
         }
         if (signalAction === 'CALL') {
-            return candleBefore.getOpenValue() < candleAfter.getCloseValue() ?
-                { operationSummary, result: 'WIN' } : { operationSummary, result: 'LOSS' };
+            if (candleBefore.getOpenValue() > candleAfter.getCloseValue()) {
+                return { operationSummary, result: 'WIN' };
+            }
+            if (candleBefore.getOpenValue() < candleAfter.getCloseValue()) {
+                return { operationSummary, result: 'LOSS' };
+            }
+            if (candleBefore.getOpenValue() === candleAfter.getCloseValue()) {
+                return { operationSummary, result: 'DOJI' };
+            }
         }
     }
 }
