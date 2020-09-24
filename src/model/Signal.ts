@@ -14,6 +14,7 @@ export default class Signal {
         try {
             this.expiration = this.expirationToTimebox(signalData.expiration);
             this.time = this.timeStringToDate(signalData.time);
+            this.checkAction(this.action);
         } catch (err) {
             Logger.error(`Error while creating Signal from SignalData ${JSON.stringify(signalData)}`, err);
             throw new Error(`Error while creating Signal from SignalData ${JSON.stringify(signalData)}`);
@@ -25,6 +26,12 @@ export default class Signal {
         const minutes = parseInt(timeString.substring(3, 5),10);
         const now = new Date();
         return new Date(now.getFullYear(), now.getMonth()-1, now.getDate(), hour, minutes, 0)
+    }
+
+    private checkAction(action: string) {
+        if (action.toLowerCase() !== 'PUT'.toLowerCase() || action.toLowerCase() !== 'CALL'.toLowerCase()) {
+            throw new Error(`Invalid action for SignalData`);
+        }
     }
 
     private expirationToTimebox(expiration: number) {

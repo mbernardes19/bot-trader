@@ -52,7 +52,7 @@ export default class SignalRunner {
         Logger.info(`Checking win for operation summary:`, operationSummary);
         const {candleBefore, candleAfter, signalAction} = operationSummary;
 
-        if (signalAction === 'PUT') {
+        if (signalAction.toLowerCase() === 'PUT'.toLowerCase()) {
             if (candleBefore.getOpenValue() > candleAfter.getCloseValue()) {
                 return { operationSummary, result: 'WIN' };
             }
@@ -63,7 +63,7 @@ export default class SignalRunner {
                 return { operationSummary, result: 'DOJI' };
             }
         }
-        if (signalAction === 'CALL') {
+        if (signalAction.toLowerCase() === 'CALL'.toLowerCase()) {
             if (candleBefore.getOpenValue() < candleAfter.getCloseValue()) {
                 return { operationSummary, result: 'WIN' };
             }
