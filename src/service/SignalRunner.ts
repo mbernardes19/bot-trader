@@ -36,7 +36,7 @@ export default class SignalRunner {
         try {
             Logger.info(`Running signal:`, signal);
             const candleBefore = await this._derivClient.getCurrentCandleFor(signal.getAsset(), signal.getExpiration());
-            Logger.info(`Waiting ${signal.getExpiration()} minutes to get last signal again`);
+            Logger.info(`Waiting ${signal.getExpiration()/60} minute(s) to get last signal again`);
             await this.delay(signal.getExpiration() * 1000);
             const candleAfter = await this._derivClient.getLastCandleAgainFor(signal.getAsset(), signal.getExpiration());
             Logger.info(`Operation summary:`, {candleBefore, candleAfter, signalAction: signal.getAction()});

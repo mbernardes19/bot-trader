@@ -10,7 +10,6 @@ export default class RequestParser {
             if (!body.action || !body.asset || !body.time || !body.expiration) {
                 throw new Error(`Incorrect request body format for SignalData`);
             }
-            Logger.info(`Request parsed to signal data`);
             return {
                 action: body.action,
                 asset: body.asset,

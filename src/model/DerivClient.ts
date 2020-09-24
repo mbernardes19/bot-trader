@@ -53,12 +53,14 @@ export default class DerivClient {
     async getCurrentCandleFor(asset: string, timebox: Timebox): Promise<Candle> {
         Logger.info(`Getting current candle for ${asset}`);
         const currentCandle = await this.getCandles({granularity: timebox, symbol: `frx${asset}`, range: {start: subSeconds(new Date(), timebox * 2), end: new Date(), count: 1} })
+        Logger.info(`Current candle for ${asset}:`, currentCandle[0]);
         return currentCandle[0];
     }
 
     async getLastCandleAgainFor(asset: string, timebox: Timebox): Promise<Candle> {
         Logger.info(`Getting last candle again for ${asset}`);
         const currentCandle = await this.getCandles({granularity: timebox, symbol: `frx${asset}`, range: {start: subSeconds(new Date(), timebox * 2), end: new Date(), count: 2} })
+        Logger.info(`Last candle again for ${asset}:`, currentCandle[0]);
         return currentCandle[0];
     }
 

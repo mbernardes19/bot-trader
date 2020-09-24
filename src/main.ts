@@ -18,9 +18,8 @@ app.post('/check-signal', (req: Request, res: Response) => {
     let signal;
     try {
         signalData = RequestParser.toSignalData(req);
-        Logger.info(`Received request:`, req.body);
         signal = new Signal(signalData);
-        Logger.info(`Created signal:`, signal);
+        Logger.info(`Created signal`);
     } catch (err) {
         res.status(400).send();
         return;
