@@ -5,6 +5,7 @@ import Candle from './Candle';
 import subSeconds from 'date-fns/subSeconds'
 import { Timebox } from './interfaces/Timebox';
 import Logger from '../service/Logger';
+import TradingClient from './TradingClient';
 
 export type HistoryRange = {
     start: number | Date,
@@ -18,12 +19,13 @@ export type CandlesParam = {
     range: HistoryRange
 }
 
-export default class DerivClient {
+export default class DerivClient extends TradingClient {
     private _derivAPI: DerivAPI;
     private _ws: WebSocket;
     private _connectionStatus: string;
 
     constructor(webSocket?: WebSocket, derivAPI?: DerivAPI) {
+        super();
         webSocket ?
             this._ws = webSocket :
             this._ws = new WebSocket('wss://frontend.binaryws.com/websockets/v3?l=EN&app_id=23707');
@@ -61,6 +63,7 @@ export default class DerivClient {
         Logger.info(`Getting last candle again for ${asset}`);
         const currentCandle = await this.getCandles({granularity: timebox, symbol: `frx${asset}`, range: {start: subSeconds(new Date(), timebox * 2), end: new Date(), count: 2} })
         Logger.info(`Last candle again for ${asset}:`, currentCandle[0]);
+        this.closeConnection();
         return currentCandle[0];
     }
 
