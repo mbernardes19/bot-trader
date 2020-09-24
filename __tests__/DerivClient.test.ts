@@ -103,4 +103,29 @@ describe('DerivClient', () => {
         // Then
         expect(derivClient.getConnectionStatus()).toBe('closed');
     })
+
+    it('should return false to check asset availability', async () => {
+        mockedDerivAPI.underlying.mockImplementationOnce((asset: string) => ({_data: {}}))
+        mockedDerivAPI.underlying.mockImplementationOnce((asset: string) => ({_data: { is_open: 0 }}))
+        // Given
+
+        // When
+        const availability = await derivClient.checkAssetAvailability('INVALID ASSET');
+        const availability2 = await derivClient.checkAssetAvailability('INVALID ASSET');
+
+        // Then
+        expect(availability).toBe(false);
+        expect(availability2).toBe(false);
+    })
+
+    it('should return false to check asset availability', async () => {
+        mockedDerivAPI.underlying.mockImplementation((asset: string) => ({_data: { is_open: 1}}))
+        // Given
+
+        // When
+        const availability = await derivClient.checkAssetAvailability('INVALID ASSET');
+
+        // Then
+        expect(availability).toBe(true);
+    })
 })

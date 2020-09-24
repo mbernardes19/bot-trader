@@ -80,6 +80,7 @@ describe('SignalRunner', () => {
 
     it('should wait for signals expiration time (1 minute) to get candle again', async () => {
         // Given
+        mockedDerivClient.checkAssetAvailability.mockImplementation(() => Promise.resolve(true))
         const signal = new Signal({time: '10:15', asset:'EURUSD', action: 'PUT', expiration: 1});
 
         // When
@@ -93,6 +94,7 @@ describe('SignalRunner', () => {
 
     it('should wait for signals expiration time (5 minutes) to get candle again', async () => {
         // Given
+        mockedDerivClient.checkAssetAvailability.mockImplementation(() => Promise.resolve(true))
         const signal = new Signal({time: '10:15', asset:'EURUSD', action: 'PUT', expiration: 5});
 
         // When

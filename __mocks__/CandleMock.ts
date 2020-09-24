@@ -1,4 +1,4 @@
-import { CandleData, DerivServerResponse } from '../src/model/interfaces/Candle';
+import { CandleData, DerivServerResponse } from '../src/model/interfaces/CandleData';
 
 export function getDerivServerResponse(n: number): DerivServerResponse {
     let candles = [];
