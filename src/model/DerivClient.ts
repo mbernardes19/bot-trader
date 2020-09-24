@@ -68,8 +68,13 @@ export default class DerivClient extends TradingClient {
     }
 
     async checkAssetAvailability(asset: string): Promise<boolean> {
-        const response = await this._derivAPI.underlying('frx'+asset) as DerivServerResponse
-        return response._data.is_open === 1 ? true : false
+        let response: DerivServerResponse;
+        try {
+            response = await this._derivAPI.underlying('frx'+asset) as DerivServerResponse
+            return response._data.is_open === 1 ? true : false
+        } catch (err) {
+            return false;
+        }
     }
 
     closeConnection() {
