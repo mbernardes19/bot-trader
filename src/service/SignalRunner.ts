@@ -34,17 +34,21 @@ export default class SignalRunner {
 
     async run(signal: Signal): Promise<OperationSummary> {
         try {
+            Logger.info(`Running signal:`, signal);
             const candleBefore = await this._derivClient.getCurrentCandleFor(signal.getAsset(), signal.getExpiration());
+            Logger.info(`Waiting ${signal.getExpiration()} minutes to get last signal again`);
             await this.delay(signal.getExpiration() * 1000);
             const candleAfter = await this._derivClient.getLastCandleAgainFor(signal.getAsset(), signal.getExpiration());
+            Logger.info(`Operation summary:`, {candleBefore, candleAfter, signalAction: signal.getAction()});
             return {candleBefore, candleAfter, signalAction: signal.getAction()};
         } catch (err) {
-            Logger.error(`Error while running signal ${signal}`, err);
-            throw new Error(`Error while running signal ${signal}`)
+            Logger.error(`Error while running signal ${JSON.stringify(signal)}`, err);
+            throw new Error(`Error while running signal ${JSON.stringify(signal)}`)
         }
     };
 
     checkWin(operationSummary: OperationSummary): OperationResult {
+        Logger.info(`Checking win for operation summary:`, operationSummary);
         const {candleBefore, candleAfter, signalAction} = operationSummary;
 
         if (signalAction === 'PUT') {

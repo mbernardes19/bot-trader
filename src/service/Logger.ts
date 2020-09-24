@@ -1,25 +1,29 @@
 export default class Logger {
-    private static log(message: string, prefix: string, extra?: any) {
+    private static log(message: any, prefix: string, extra?: any) {
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth()+1;
-        const day = now.getDay();
+        const day = now.getDate();
         const hours = now.getHours();
         const minutes = now.getMinutes();
         const seconds = now.getSeconds();
         const milliseconds = now.getMilliseconds();
-        console.log(`[${day}-${month}-${year} ${hours}:${minutes}:${seconds}::${milliseconds}] [${prefix}] ${message} ${extra}`);
+        if (extra) {
+            console.log(`[${day}-${month}-${year} ${hours}:${minutes}:${seconds}::${milliseconds}] [${prefix}]`, message, extra);
+        } else {
+            console.log(`[${day}-${month}-${year} ${hours}:${minutes}:${seconds}::${milliseconds}] [${prefix}]`, message);
+        }
     }
 
-    static info(message: string) {
-        this.log(message, 'INFO');
+    static info(message: any, extra?: any) {
+        this.log(message, 'INFO', extra);
     }
 
-    static error(message: string, error: any) {
+    static error(message: any, error: any) {
         this.log(message, 'ERROR', error);
     }
 
-    static warning(message: string) {
-        this.log(message, 'WARNING');
+    static warning(message: any, extra?: any) {
+        this.log(message, 'WARNING', extra);
     }
 }

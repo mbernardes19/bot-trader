@@ -15,8 +15,8 @@ export default class Signal {
             this.expiration = this.expirationToTimebox(signalData.expiration);
             this.time = this.timeStringToDate(signalData.time);
         } catch (err) {
-            Logger.error(`Error while creating Signal from SignalData ${signalData}`, err);
-            throw new Error(`Error while creating Signal from SignalData ${signalData}`);
+            Logger.error(`Error while creating Signal from SignalData ${JSON.stringify(signalData)}`, err);
+            throw new Error(`Error while creating Signal from SignalData ${JSON.stringify(signalData)}`);
         }
     }
 

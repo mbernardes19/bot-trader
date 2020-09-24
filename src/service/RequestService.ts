@@ -17,8 +17,11 @@ export default class RequestService {
     }
 
     async post(url: string, data: any): Promise<AxiosResponse> {
+        Logger.info(`Sending POST request to: ${url} with data:`, data);
         try {
-            return await this._request.post(url, data);
+            const response = await this._request.post(url, data);
+            Logger.info(`POST request sent, got response`);
+            return response
         } catch (err) {
             Logger.error(`An error occurred while sending a post request to ${url}`, err);
             throw new Error(`An error occurred while sending a post request to ${url}`)
