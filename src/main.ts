@@ -2,7 +2,7 @@ import DerivClient from './model/DerivClient';
 import express, {Request, Response} from 'express';
 import Signal from './model/Signal';
 import bodyParser from 'body-parser';
-import SignalRunner from './service/SignalRunner';
+import SignalRunner from './model/SignalRunner';
 import CacheService from './service/CacheService';
 import RequestService from './service/RequestService';
 import Logger from './service/Logger';

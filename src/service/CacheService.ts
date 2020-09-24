@@ -1,5 +1,5 @@
 import NodeCache from 'node-cache';
-import { OperationResult } from './SignalRunner';
+import { OperationResult } from '../model/SignalRunner';
 import Logger from './Logger';
 
 export default class CacheService {

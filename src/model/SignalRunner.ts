@@ -1,7 +1,7 @@
-import Signal from "../model/Signal";
-import DerivClient from "../model/DerivClient";
-import Candle from "../model/Candle";
-import Logger from './Logger';
+import Signal from "./Signal";
+import DerivClient from "./DerivClient";
+import Candle from "./Candle";
+import Logger from '../service/Logger';
 
 export type OperationSummary = {
     candleBefore: Candle,
