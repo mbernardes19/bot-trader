@@ -1,10 +1,14 @@
-import { Candle, DerivServerResponse } from '../src/model/interfaces/Candle';
+import { CandleData, DerivServerResponse } from '../src/model/interfaces/Candle';
 
-export function getDerivServerResponse(): DerivServerResponse {
-    return {_data: {list: [{raw: getCandle()}]}}
+export function getDerivServerResponse(n: number): DerivServerResponse {
+    let candles = [];
+    for(let i = 0; i < n; i++) {
+        candles.push({raw: getCandle()})
+    }
+    return {_data: {list: candles}}
 }
 
-export function getCandle(): Candle {
+export function getCandle(): CandleData {
     return { open: 123, close: 234, epoch: 245, high: 234, low: 345}
 }
 

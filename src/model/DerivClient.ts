@@ -1,6 +1,6 @@
 import DerivAPI from '@deriv/deriv-api';
 import WebSocket from 'ws';
-import { CandleData, DerivServerResponse } from './interfaces/Candle';
+import { DerivServerResponse } from './interfaces/Candle';
 import Candle from './Candle';
 import subSeconds from 'date-fns/subSeconds'
 import { Timebox } from './interfaces/Timebox';
@@ -20,10 +20,16 @@ export type CandlesParam = {
 export default class DerivClient {
     private _derivAPI: DerivAPI;
     private _ws: WebSocket;
+    private _connectionStatus: string;
 
-    constructor() {
-        this._ws = new WebSocket('wss://frontend.binaryws.com/websockets/v3?l=EN&app_id=23707');
-        this._derivAPI = new DerivAPI({ connection: this._ws });
+    constructor(webSocket?: WebSocket, derivAPI?: DerivAPI) {
+        webSocket ?
+            this._ws = webSocket :
+            this._ws = new WebSocket('wss://frontend.binaryws.com/websockets/v3?l=EN&app_id=23707');
+        derivAPI ?
+            this._derivAPI = derivAPI :
+            this._derivAPI = new DerivAPI({ connection: this._ws });
+        this._connectionStatus = 'active';
     }
 
     async getCandles(candlesParam: CandlesParam): Promise<Candle[]> {
@@ -36,6 +42,10 @@ export default class DerivClient {
             console.error(err);
             throw new Error('Error while getting candles from server');
         }
+    }
+
+    getConnectionStatus() {
+        return this._connectionStatus
     }
 
     async getCurrentCandleFor(asset: string, timebox: Timebox): Promise<Candle> {
@@ -51,6 +61,7 @@ export default class DerivClient {
     closeConnection() {
         try {
             this._ws.close()
+            this._connectionStatus = 'closed';
         } catch (err) {
             console.error(err)
             throw new Error('Error while closing web socket connection');
