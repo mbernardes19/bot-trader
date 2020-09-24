@@ -1,6 +1,6 @@
 import DerivClient from '../src/model/DerivClient';
 import Candle from '../src/model/Candle';
-import SignalRunner, { OperationSummary } from '../src/service/SignalRunner';
+import SignalRunner, { OperationSummary } from '../src/model/SignalRunner';
 import { Timebox } from '../src/model/interfaces/Timebox';
 import Signal from '../src/model/Signal';
 

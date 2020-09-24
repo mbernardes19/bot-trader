@@ -63,10 +63,10 @@ export default class SignalRunner {
             }
         }
         if (signalAction === 'CALL') {
-            if (candleBefore.getOpenValue() > candleAfter.getCloseValue()) {
+            if (candleBefore.getOpenValue() < candleAfter.getCloseValue()) {
                 return { operationSummary, result: 'WIN' };
             }
-            if (candleBefore.getOpenValue() < candleAfter.getCloseValue()) {
+            if (candleBefore.getOpenValue() > candleAfter.getCloseValue()) {
                 return { operationSummary, result: 'LOSS' };
             }
             if (candleBefore.getOpenValue() === candleAfter.getCloseValue()) {
