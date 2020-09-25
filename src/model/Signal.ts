@@ -7,10 +7,12 @@ export default class Signal {
     private asset: string;
     private action: string;
     private expiration: Timebox;
+    private telegramMessageId: number;
 
     constructor(signalData: SignalData) {
         this.asset = signalData.asset;
         this.action = signalData.action;
+        this.telegramMessageId = signalData.telegramMessageId;
         try {
             this.expiration = this.expirationToTimebox(signalData.expiration);
             this.time = this.timeStringToDate(signalData.time);
@@ -65,5 +67,9 @@ export default class Signal {
 
     getAction() {
         return this.action;
+    }
+
+    getTelegramMessageId() {
+        return this.telegramMessageId;
     }
 }

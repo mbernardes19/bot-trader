@@ -3,4 +3,5 @@ export interface SignalData {
     asset: string;
     action: string;
     expiration: number;
+    telegramMessageId: number;
 }

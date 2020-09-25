@@ -63,7 +63,6 @@ export default class DerivClient extends TradingClient {
         Logger.info(`Getting last candle again for ${asset}`);
         const currentCandle = await this.getCandles({granularity: timebox, symbol: `frx${asset}`, range: {start: subSeconds(new Date(), timebox * 2), end: new Date(), count: 2} })
         Logger.info(`Last candle again for ${asset}:`, currentCandle[0]);
-        this.closeConnection();
         return currentCandle[0];
     }
 
