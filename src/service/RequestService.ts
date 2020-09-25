@@ -10,8 +10,8 @@ export default class RequestService {
 
     private createBaseRequest(): AxiosInstance {
         return axios.create({
-            // baseURL: 'http://metodosemprerico.kinghost.net:21634',
-            baseURL: 'http://localhost:6000',
+            baseURL: 'http://metodosemprerico.kinghost.net:21634',
+            // baseURL: 'http://localhost:6000',
             headers: { 'Content-Type': 'application/json'}
         })
     }
