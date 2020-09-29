@@ -1,4 +1,8 @@
+import RequestService from '../service/RequestService';
+
 export default class Logger {
+    private static _request = new RequestService();
+
     private static log(message: any, prefix: string, extra?: any) {
         const now = new Date();
         const year = now.getFullYear();
@@ -25,5 +29,9 @@ export default class Logger {
 
     static warning(message: any, extra?: any) {
         this.log(message, 'WARNING', extra);
+    }
+
+    static async notifyAdmins(message: string) {
+        await this._request.post('/signal-failed', { failed: true, message })
     }
 }

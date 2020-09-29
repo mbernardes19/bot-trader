@@ -44,7 +44,18 @@ export default class DerivClient extends TradingClient {
             })
         } catch (err) {
             Logger.error('Error while getting candles from server', err);
-            throw new Error('Error while getting candles from server');
+            Logger.info('Trying to get candles again');
+            try {
+                const response = await this._derivAPI.candles(candlesParam) as DerivServerResponse;
+                return response._data.list.map(responseData => {
+                    return new Candle(responseData.raw, candlesParam.granularity);
+                })
+            } catch (err) {
+                Logger.error(`Could not get candles for ${candlesParam}`, err);
+                Logger.info('Notifying admins')
+                Logger.notifyAdmins(`Ocorreu um erro no servidor da Binary e não foi possível pegar as velas atuais para o par ${candlesParam.symbol}`)
+                throw new Error('Error while getting candles from server');
+            }
         }
     }
 
