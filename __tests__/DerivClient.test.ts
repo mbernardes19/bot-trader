@@ -3,9 +3,11 @@ import Candle from '../src/model/Candle';
 import { getDerivServerResponse } from '../__mocks__/CandleMock';
 import DerivAPI from '@deriv/deriv-api';
 import WebSocket from 'ws';
+import Logger from '../src/service/Logger';
 
 jest.mock('@deriv/deriv-api');
 jest.mock('ws');
+jest.mock('../src/service/Logger');
 
 let derivClient: DerivClient;
 const mockedWebSocket = new WebSocket() as jest.MockedClass<WebSocket>
@@ -51,6 +53,49 @@ describe('DerivClient', () => {
         // Then
         expect(candles[0]).toBeInstanceOf(Candle);
         expect(candles).toHaveLength(2);
+    })
+
+    it('should try again after first fail to get candles', async () => {
+        mockedDerivAPI.candles.mockImplementationOnce(() => {
+            throw new Error('Erro');
+        });
+        mockedDerivAPI.candles.mockImplementationOnce(() => getDerivServerResponse(1));
+
+        // Given
+        const candleParam: CandlesParam = {
+            granularity: 60,
+            symbol: 'frxEURUSD',
+            range: { start: new Date(), end: new Date(), count: 1}
+        }
+
+        // When
+        const candles = await derivClient.getCandles(candleParam);
+
+        // Then
+        expect(Logger.info).toHaveBeenCalledWith('Trying to get candles again')
+        expect(mockedDerivAPI.candles).toHaveBeenCalledTimes(2);
+    })
+
+    it('should notify admins after two fails to get candles', async () => {
+        mockedDerivAPI.candles.mockImplementation(() => {
+            throw new Error('Erro');
+        });
+
+        // Given
+        const candleParam: CandlesParam = {
+            granularity: 60,
+            symbol: 'frxEURUSD',
+            range: { start: new Date(), end: new Date(), count: 1}
+        }
+
+        try {
+            // When
+            await derivClient.getCandles(candleParam);
+        } catch (err) {
+            // Then
+            expect(Logger.notifyAdmins).toHaveBeenCalled();
+            expect(mockedDerivAPI.candles).toHaveBeenCalledTimes(2);
+        }
     })
 
     it('connection should keep existing after getting candle', async () => {

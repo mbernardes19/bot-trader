@@ -1,6 +1,6 @@
 import DerivClient from '../src/model/DerivClient';
 import Candle from '../src/model/Candle';
-import SignalRunner, { OperationSummary, OperationResult } from '../src/model/SignalRunner';
+import SignalRunner, { OperationResult } from '../src/model/SignalRunner';
 import { Timebox } from '../src/model/interfaces/Timebox';
 import TradingManager from '../src/model/TradingManager';
 import Signal from '../src/model/Signal';
@@ -23,22 +23,26 @@ describe('TradingManager', () => {
     it('should run signal without gale', async () => {
         // Given
         process.env.GALE = undefined;
-        const signal: Signal = new Signal({time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD'});
+        const signal: Signal = new Signal({ time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD', telegramMessageId: 201 });
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
             operationSummary: {
                 candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                signalAction: 'PUT'
+                signalAction: 'PUT',
+                telegramMessageId: 201,
             },
-            result: 'LOSS'
+            result: 'LOSS',
+            telegramMessageId: 201,
         }))
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
             operationSummary: {
                 candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                signalAction: 'PUT'
+                signalAction: 'PUT',
+                telegramMessageId: 201
             },
-            result: 'WIN'
+            result: 'WIN',
+            telegramMessageId: 201
         }))
 
         // When
@@ -48,25 +52,29 @@ describe('TradingManager', () => {
         expect(operationResult.result).toBe('LOSS')
     })
 
-    it('should run signal without gale', async () => {
+    it('should run signal with gale', async () => {
         // Given
         process.env.GALE = 'true';
-        const signal: Signal = new Signal({time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD'});
+        const signal: Signal = new Signal({time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD', telegramMessageId: 201 });
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
             operationSummary: {
                 candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                signalAction: 'PUT'
+                signalAction: 'PUT',
+                telegramMessageId: 201
             },
-            result: 'LOSS'
+            result: 'LOSS',
+            telegramMessageId: 201
         }))
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
             operationSummary: {
                 candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                signalAction: 'PUT'
+                signalAction: 'PUT',
+                telegramMessageId: 201
             },
-            result: 'WIN'
+            result: 'WIN',
+            telegramMessageId: 201
         }))
 
         // When
