@@ -8,6 +8,14 @@ export default class RequestService {
         this._request = this.createBaseRequest();
     }
 
+    private delay(n) {
+        return new Promise(done => {
+          setTimeout(() => {
+            done();
+          }, n);
+        });
+    };
+
     private createBaseRequest(): AxiosInstance {
         return axios.create({
             baseURL: 'http://metodosemprerico.kinghost.net:21634',
@@ -23,8 +31,21 @@ export default class RequestService {
             Logger.info(`POST request sent, got response`);
             return response
         } catch (err) {
+            if (err.message === 'socket hang up') {
+                Logger.info(`Error while sending post request: ${err}. Trying to send it again.`)
+                try {
+                    await axios.get('http://metodosemprerico.kinghost.net:21563/revive')
+                    this.delay(20000);
+                    const response = await this._request.post(url, data);
+                    Logger.info(`POST request sent, got response`);
+                    return response
+                } catch (err) {
+                    Logger.error(`An error occurred while sending a post request to ${url}`, err);
+                    throw new Error(`An error occurred while sending a post request to ${url}`);
+                }
+            }
             Logger.error(`An error occurred while sending a post request to ${url}`, err);
-            throw new Error(`An error occurred while sending a post request to ${url}`)
+            throw new Error(`An error occurred while sending a post request to ${url}`);
         }
     }
 
