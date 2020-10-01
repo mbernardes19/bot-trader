@@ -43,4 +43,8 @@ app.post('/check-signal', (req: Request, res: Response) => {
     })()
 })
 
-app.listen(3000, () => Logger.info('Conectado na porta 3000'))
+if (process.env.NODE_ENV === 'production') {
+    app.listen(3000, () => Logger.info('Conectado na porta 3000'))
+} else {
+    app.listen(4000, () => Logger.info('Conectado na porta 4000'))
+}
