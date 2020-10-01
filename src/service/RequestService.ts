@@ -17,11 +17,17 @@ export default class RequestService {
     };
 
     private createBaseRequest(): AxiosInstance {
-        return axios.create({
-            baseURL: 'http://metodosemprerico.kinghost.net:21634',
-            // baseURL: 'http://localhost:6000',
-            headers: { 'Content-Type': 'application/json'}
-        })
+        if (process.env.NODE_ENV === 'production') {
+            return axios.create({
+                baseURL: 'http://metodosemprerico.kinghost.net:21634',
+                headers: { 'Content-Type': 'application/json'}
+            })
+        } else {
+            return axios.create({
+                baseURL: 'http://metodosemprerico.kinghost.net:21539',
+                headers: { 'Content-Type': 'application/json'}
+            })
+        }
     }
 
     async post(url: string, data: any): Promise<AxiosResponse> {
