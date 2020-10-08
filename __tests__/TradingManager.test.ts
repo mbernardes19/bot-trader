@@ -29,19 +29,23 @@ describe('TradingManager', () => {
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 signalAction: 'PUT',
                 telegramMessageId: 201,
+                gale: false
             },
             result: 'LOSS',
             telegramMessageId: 201,
+            gale: false
         }))
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
             operationSummary: {
                 candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 signalAction: 'PUT',
-                telegramMessageId: 201
+                telegramMessageId: 201,
+                gale: false
             },
             result: 'WIN',
-            telegramMessageId: 201
+            telegramMessageId: 201,
+            gale: false
         }))
 
         // When
@@ -59,20 +63,24 @@ describe('TradingManager', () => {
                 candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 signalAction: 'PUT',
-                telegramMessageId: 201
+                telegramMessageId: 201,
+                gale: true
             },
             result: 'LOSS',
-            telegramMessageId: 201
+            telegramMessageId: 201,
+            gale: true
         }))
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
             operationSummary: {
                 candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 signalAction: 'PUT',
-                telegramMessageId: 201
+                telegramMessageId: 201,
+                gale: true
             },
             result: 'WIN',
-            telegramMessageId: 201
+            telegramMessageId: 201,
+            gale: true
         }))
 
         // When

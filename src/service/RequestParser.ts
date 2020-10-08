@@ -15,7 +15,8 @@ export default class RequestParser {
                 asset: body.asset,
                 time: body.time,
                 expiration: body.expiration,
-                telegramMessageId: body.telegramMessageId
+                telegramMessageId: body.telegramMessageId,
+                gale: body.gale
             }
         } catch (err) {
             Logger.error(`Error while parsing SignalData from Request ${JSON.stringify(request.body)}`, err);

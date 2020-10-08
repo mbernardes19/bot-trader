@@ -24,7 +24,8 @@ describe('SignalRunner', () => {
             candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
             candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
             signalAction: 'PUT',
-            telegramMessageId: 201
+            telegramMessageId: 201,
+            gale: false
         }
 
         // When
@@ -40,7 +41,8 @@ describe('SignalRunner', () => {
             candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
             candleAfter: new Candle({ open: 123, close: 123.5, high: 545, low: 454, epoch: 252}, Timebox.M5),
             signalAction: 'CALL',
-            telegramMessageId: 201
+            telegramMessageId: 201,
+            gale: false
         }
 
         // When
@@ -56,7 +58,8 @@ describe('SignalRunner', () => {
             candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
             candleAfter: new Candle({ open: 123, close: 123.5, high: 545, low: 454, epoch: 252}, Timebox.M5),
             signalAction: 'PUT',
-            telegramMessageId: 201
+            telegramMessageId: 201,
+            gale: false
         }
 
         // When
@@ -72,7 +75,8 @@ describe('SignalRunner', () => {
             candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
             candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
             signalAction: 'CALL',
-            telegramMessageId: 201
+            telegramMessageId: 201,
+            gale: false
         }
 
         // When

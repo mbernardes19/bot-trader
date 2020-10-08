@@ -8,12 +8,14 @@ export type OperationSummary = {
     candleAfter: Candle,
     signalAction: string,
     telegramMessageId: number,
+    gale: boolean
 }
 
 export type OperationResult = {
     operationSummary: OperationSummary,
     result: string,
-    telegramMessageId: number
+    telegramMessageId: number,
+    gale: boolean
 }
 
 export default class SignalRunner {
@@ -44,7 +46,7 @@ export default class SignalRunner {
                 await this.delay(signal.getExpiration() * 1000);
                 const candleAfter = await this._tradingClient.getLastCandleAgainFor(signal.getAsset(), signal.getExpiration());
                 Logger.info(`Operation summary:`, {candleBefore, candleAfter, signalAction: signal.getAction()});
-                return {candleBefore, candleAfter, signalAction: signal.getAction(), telegramMessageId: signal.getTelegramMessageId()};
+                return {candleBefore, candleAfter, signalAction: signal.getAction(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale()};
             } else {
                 const err = new Error(`Asset ${signal.getAsset()} not available at the moment`);
                 Logger.error(`Asset ${signal.getAsset()} not available at the moment`, err);
@@ -66,24 +68,24 @@ export default class SignalRunner {
 
         if (signalAction.toLowerCase() === 'PUT'.toLowerCase()) {
             if (candleBefore.getOpenValue() > candleAfter.getCloseValue()) {
-                return { operationSummary, result: 'WIN', telegramMessageId: operationSummary.telegramMessageId };
+                return { operationSummary, result: 'WIN', telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale };
             }
             if (candleBefore.getOpenValue() < candleAfter.getCloseValue()) {
-                return { operationSummary, result: 'LOSS', telegramMessageId: operationSummary.telegramMessageId };
+                return { operationSummary, result: 'LOSS', telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale };
             }
             if (candleBefore.getOpenValue() === candleAfter.getCloseValue()) {
-                return { operationSummary, result: 'DOJI', telegramMessageId: operationSummary.telegramMessageId};
+                return { operationSummary, result: 'DOJI', telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale};
             }
         }
         if (signalAction.toLowerCase() === 'CALL'.toLowerCase()) {
             if (candleBefore.getOpenValue() < candleAfter.getCloseValue()) {
-                return { operationSummary, result: 'WIN', telegramMessageId: operationSummary.telegramMessageId };
+                return { operationSummary, result: 'WIN', telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale };
             }
             if (candleBefore.getOpenValue() > candleAfter.getCloseValue()) {
-                return { operationSummary, result: 'LOSS', telegramMessageId: operationSummary.telegramMessageId };
+                return { operationSummary, result: 'LOSS', telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale };
             }
             if (candleBefore.getOpenValue() === candleAfter.getCloseValue()) {
-                return { operationSummary, result: 'DOJI', telegramMessageId: operationSummary.telegramMessageId };
+                return { operationSummary, result: 'DOJI', telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale };
             }
         }
     }
