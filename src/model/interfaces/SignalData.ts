@@ -4,5 +4,6 @@ export interface SignalData {
     action: string;
     expiration: number;
     telegramMessageId: number;
+    telegramChannelId: number;
     gale: boolean
 }

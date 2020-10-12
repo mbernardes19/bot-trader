@@ -7,7 +7,7 @@ export default class RequestParser {
         try {
             Logger.info(`Parsing request to signal data`, request.body);
             const {body} = request;
-            if (!body.action || !body.asset || !body.time || !body.expiration || !body.telegramMessageId) {
+            if (!body.action || !body.asset || !body.time || !body.expiration || !body.telegramMessageId || !body.telegramChannelId) {
                 throw new Error(`Incorrect request body format for SignalData`);
             }
             return {
@@ -16,6 +16,7 @@ export default class RequestParser {
                 time: body.time,
                 expiration: body.expiration,
                 telegramMessageId: body.telegramMessageId,
+                telegramChannelId: body.telegramChannelId,
                 gale: body.gale
             }
         } catch (err) {

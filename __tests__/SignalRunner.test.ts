@@ -25,6 +25,7 @@ describe('SignalRunner', () => {
             candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
             signalAction: 'PUT',
             telegramMessageId: 201,
+            telegramChannelId: -100,
             gale: false
         }
 
@@ -42,6 +43,7 @@ describe('SignalRunner', () => {
             candleAfter: new Candle({ open: 123, close: 123.5, high: 545, low: 454, epoch: 252}, Timebox.M5),
             signalAction: 'CALL',
             telegramMessageId: 201,
+            telegramChannelId: -100,
             gale: false
         }
 
@@ -59,6 +61,7 @@ describe('SignalRunner', () => {
             candleAfter: new Candle({ open: 123, close: 123.5, high: 545, low: 454, epoch: 252}, Timebox.M5),
             signalAction: 'PUT',
             telegramMessageId: 201,
+            telegramChannelId: -100,
             gale: false
         }
 
@@ -76,6 +79,7 @@ describe('SignalRunner', () => {
             candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
             signalAction: 'CALL',
             telegramMessageId: 201,
+            telegramChannelId: -100,
             gale: false
         }
 
@@ -89,7 +93,7 @@ describe('SignalRunner', () => {
     it('should wait for signals expiration time (1 minute) to get candle again', async () => {
         // Given
         mockedDerivClient.checkAssetAvailability.mockImplementation(() => Promise.resolve(true))
-        const signal = new Signal({time: '10:15', asset:'EURUSD', action: 'PUT', expiration: 1, telegramMessageId: 201, gale: true});
+        const signal = new Signal({time: '10:15', asset:'EURUSD', action: 'PUT', expiration: 1, telegramMessageId: 201, telegramChannelId: -100, gale: true});
 
         // When
         await signalRunner.run(signal)
@@ -103,7 +107,7 @@ describe('SignalRunner', () => {
     it('should wait for signals expiration time (5 minutes) to get candle again', async () => {
         // Given
         mockedDerivClient.checkAssetAvailability.mockImplementation(() => Promise.resolve(true))
-        const signal = new Signal({time: '10:15', asset:'EURUSD', action: 'PUT', expiration: 5, telegramMessageId: 201, gale: true});
+        const signal = new Signal({time: '10:15', asset:'EURUSD', action: 'PUT', expiration: 5, telegramMessageId: 201, telegramChannelId: -100, gale: true});
 
         // When
         await signalRunner.run(signal)

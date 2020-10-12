@@ -22,17 +22,19 @@ beforeEach(() => {
 describe('TradingManager', () => {
     it('should run signal without gale', async () => {
         // Given
-        const signal: Signal = new Signal({ time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD', telegramMessageId: 201, gale: false });
+        const signal: Signal = new Signal({ time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD', telegramMessageId: 201, telegramChannelId: -100, gale: false });
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
             operationSummary: {
                 candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 signalAction: 'PUT',
                 telegramMessageId: 201,
+                telegramChannelId: -100,
                 gale: false
             },
             result: 'LOSS',
             telegramMessageId: 201,
+            telegramChannelId: -100,
             gale: false
         }))
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
@@ -41,10 +43,12 @@ describe('TradingManager', () => {
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 signalAction: 'PUT',
                 telegramMessageId: 201,
+                telegramChannelId: -100,
                 gale: false
             },
             result: 'WIN',
             telegramMessageId: 201,
+            telegramChannelId: -100,
             gale: false
         }))
 
@@ -57,17 +61,19 @@ describe('TradingManager', () => {
 
     it('should run signal with gale', async () => {
         // Given
-        const signal: Signal = new Signal({time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD', telegramMessageId: 201, gale: true });
+        const signal: Signal = new Signal({time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD', telegramMessageId: 201, telegramChannelId: -100, gale: true });
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
             operationSummary: {
                 candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 signalAction: 'PUT',
                 telegramMessageId: 201,
+                telegramChannelId: -100,
                 gale: true
             },
             result: 'LOSS',
             telegramMessageId: 201,
+            telegramChannelId: -100,
             gale: true
         }))
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
@@ -76,10 +82,12 @@ describe('TradingManager', () => {
                 candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
                 signalAction: 'PUT',
                 telegramMessageId: 201,
+                telegramChannelId: -100,
                 gale: true
             },
             result: 'WIN',
             telegramMessageId: 201,
+            telegramChannelId: -100,
             gale: true
         }))
 
