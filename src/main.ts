@@ -33,8 +33,7 @@ app.post('/check-signal', (req: Request, res: Response) => {
         try {
             const operationResult = await tradingManager.runSignal(signal);
             Logger.info(`Operation result:`, operationResult);
-            cacheService.storeOperationResult(operationResult);
-            Logger.info(`Sending operation result to Telegram Bot:`, operationResult);
+            Logger.info(`Sending operation result to Telegram Bot`);
             await requestService.post('/operation-result', operationResult);
             Logger.info(`Operation result sent and websocket connection closed`);
         } catch (err) {
