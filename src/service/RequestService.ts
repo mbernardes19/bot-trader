@@ -19,7 +19,7 @@ export default class RequestService {
     private createBaseRequest(): AxiosInstance {
         if (process.env.NODE_ENV === 'production') {
             return axios.create({
-                baseURL: 'http://metodosemprerico.kinghost.net:21634',
+                baseURL: 'https://bot.sosvestibular.com/App',
                 headers: { 'Content-Type': 'application/json'}
             })
         } else {
