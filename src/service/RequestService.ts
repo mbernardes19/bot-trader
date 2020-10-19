@@ -24,8 +24,8 @@ export default class RequestService {
             })
         } else {
             return axios.create({
-                baseURL: 'http://metodosemprerico.kinghost.net:21539',
-                // baseURL: 'http://localhost:6001',
+                // baseURL: 'http://metodosemprerico.kinghost.net:21539',
+                baseURL: 'http://localhost:6001',
                 headers: { 'Content-Type': 'application/json'}
             })
         }
