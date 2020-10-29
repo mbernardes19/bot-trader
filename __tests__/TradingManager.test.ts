@@ -4,6 +4,7 @@ import SignalRunner, { OperationResult } from '../src/model/SignalRunner';
 import { Timebox } from '../src/model/interfaces/Timebox';
 import TradingManager from '../src/model/TradingManager';
 import Signal from '../src/model/Signal';
+import { Action } from '../src/model/interfaces/SignalData';
 
 jest.mock('../src/model/SignalRunner');
 
@@ -22,31 +23,43 @@ beforeEach(() => {
 describe('TradingManager', () => {
     it('should run signal without gale', async () => {
         // Given
-        const signal: Signal = new Signal({ time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD', telegramMessageId: 201, telegramChannelId: -100, gale: false });
+        const signal: Signal = new Signal({ time: '10:15', expiration: 5, assetList: [{action: Action.PUT, pair: 'EURUSD'}], telegramMessageId: 201, telegramChannelId: -100, gale: false });
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
-            operationSummary: {
-                candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                signalAction: 'PUT',
-                telegramMessageId: 201,
-                telegramChannelId: -100,
-                gale: false
-            },
-            result: 'LOSS',
+            results: [
+                {
+                    operation: {
+                        candleDifference: {
+                            candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
+                            candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
+                        },
+                        asset: {
+                            action: Action.PUT,
+                            pair: 'EURUSD'
+                        }
+                    },
+                    result: 'LOSS'
+                }
+            ],
             telegramMessageId: 201,
             telegramChannelId: -100,
             gale: false
         }))
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
-            operationSummary: {
-                candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                signalAction: 'PUT',
-                telegramMessageId: 201,
-                telegramChannelId: -100,
-                gale: false
-            },
-            result: 'WIN',
+            results: [
+                {
+                    operation: {
+                        candleDifference: {
+                            candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
+                            candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5)
+                        },
+                        asset: {
+                            pair: 'EURUSD',
+                            action: Action.PUT
+                        }
+                    },
+                    result: 'WIN'
+                }
+            ],
             telegramMessageId: 201,
             telegramChannelId: -100,
             gale: false
@@ -56,36 +69,48 @@ describe('TradingManager', () => {
         const operationResult = await tradingManager.runSignal(signal)
 
         // Then
-        expect(operationResult.result).toBe('LOSS')
+        expect(operationResult.results[0].result).toBe('LOSS')
     })
 
     it('should run signal with gale', async () => {
         // Given
-        const signal: Signal = new Signal({time: '10:15', expiration: 5, action: 'PUT', asset: 'EURUSD', telegramMessageId: 201, telegramChannelId: -100, gale: true });
+        const signal: Signal = new Signal({time: '10:15', expiration: 5, assetList: [{action: Action.PUT, pair: 'EURUSD'}], telegramMessageId: 201, telegramChannelId: -100, gale: true });
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
-            operationSummary: {
-                candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                signalAction: 'PUT',
-                telegramMessageId: 201,
-                telegramChannelId: -100,
-                gale: true
-            },
-            result: 'LOSS',
+            results: [
+                {
+                    operation: {
+                        candleDifference: {
+                            candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
+                            candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5)
+                        },
+                        asset: {
+                            action: Action.PUT,
+                            pair: 'EURUSD'
+                        }
+                    },
+                    result: 'LOSS'
+                }
+            ],
             telegramMessageId: 201,
             telegramChannelId: -100,
             gale: true
         }))
         mockedSignalRunner.checkWin.mockImplementationOnce((): OperationResult => ({
-            operationSummary: {
-                candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5),
-                signalAction: 'PUT',
-                telegramMessageId: 201,
-                telegramChannelId: -100,
-                gale: true
-            },
-            result: 'WIN',
+            results: [
+                {
+                    operation: {
+                        candleDifference: {
+                            candleBefore: new Candle({ open: 123, close: 432, high: 545, low: 454, epoch: 252}, Timebox.M5),
+                            candleAfter: new Candle({ open: 123, close: 122.9, high: 545, low: 454, epoch: 252}, Timebox.M5)
+                        },
+                        asset: {
+                            pair: 'EURUSD',
+                            action: Action.PUT
+                        }
+                    },
+                    result: 'WIN'
+                }
+            ],
             telegramMessageId: 201,
             telegramChannelId: -100,
             gale: true
@@ -95,7 +120,7 @@ describe('TradingManager', () => {
         const operationResult = await tradingManager.runSignal(signal)
 
         // Then
-        expect(operationResult.result).toBe('WIN')
+        expect(operationResult.results[0].result).toBe('WIN')
     })
 
 });
