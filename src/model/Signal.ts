@@ -1,43 +1,38 @@
 import { Timebox } from "./interfaces/Timebox";
-import { SignalData } from "./interfaces/SignalData";
+import { SignalData, Asset } from "./interfaces/SignalData";
 import Logger from "../service/Logger";
 
 export default class Signal {
-    private time: Date;
-    private asset: string;
-    private action: string;
+    private assetList: Asset[];
     private expiration: Timebox;
     private telegramMessageId: number;
     private telegramChannelId: number;
     private gale: boolean;
 
     constructor(signalData: SignalData) {
-        this.asset = signalData.asset;
-        this.action = signalData.action;
+        this.assetList = signalData.assetList;
         this.gale = signalData.gale;
         this.telegramChannelId = signalData.telegramChannelId;
         this.telegramMessageId = signalData.telegramMessageId;
         try {
             this.expiration = this.expirationToTimebox(signalData.expiration);
-            this.time = this.timeStringToDate(signalData.time);
-            this.checkAction(this.action);
+            this.checkAssetList(this.assetList);
         } catch (err) {
             Logger.error(`Error while creating Signal from SignalData ${JSON.stringify(signalData)}`, err);
             throw new Error(`Error while creating Signal from SignalData ${JSON.stringify(signalData)}`);
         }
     }
 
-    private timeStringToDate(timeString: string) {
-        const hour = parseInt(timeString.substring(0, 2),10);
-        const minutes = parseInt(timeString.substring(3, 5),10);
-        const now = new Date();
-        return new Date(now.getFullYear(), now.getMonth()-1, now.getDate(), hour, minutes, 0)
-    }
+    private checkAssetList(assetList: Asset[]) {
+        assetList.forEach(asset => {
+            if (asset.action.toLowerCase() !== 'PUT'.toLowerCase() && asset.action.toLowerCase() !== 'CALL'.toLowerCase()) {
+                throw new Error(`Invalid action ${asset.action} in asset`);
+            }
+            if (asset.pair.length !== 6) {
+                throw new Error(`Invalid pair ${asset.pair} in asset`);
+            }
+        })
 
-    private checkAction(action: string) {
-        if (action.toLowerCase() !== 'PUT'.toLowerCase() && action.toLowerCase() !== 'CALL'.toLowerCase()) {
-            throw new Error(`Invalid action for SignalData`);
-        }
     }
 
     private expirationToTimebox(expiration: number) {
@@ -61,16 +56,12 @@ export default class Signal {
         }
     }
 
-    getAsset() {
-        return this.asset;
+    getAssetList() {
+        return this.assetList;
     }
 
     getExpiration() {
         return this.expiration;
-    }
-
-    getAction() {
-        return this.action;
     }
 
     getTelegramMessageId() {
