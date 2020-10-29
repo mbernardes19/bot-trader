@@ -18,7 +18,7 @@ export default class TradingManager {
         this._try += 1;
         const operationSummary = await this._signalRunner.run(signal);
         const operationResult = this._signalRunner.checkWin(operationSummary);
-        if ((operationResult.result === 'LOSS' || operationResult.result === 'DOJI') && this._try < 2 && signal.hasGale()) {
+        if ((operationResult.results[0].result === 'LOSS' || operationResult.results[0].result === 'DOJI') && this._try < 2 && signal.hasGale()) {
             Logger.info(`Running gale`)
             return await this.runGale(operationResult, signal);
         }
