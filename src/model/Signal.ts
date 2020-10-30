@@ -60,6 +60,10 @@ export default class Signal {
         return this.assetList;
     }
 
+    setAssetList(assetList: Asset[]) {
+        this.assetList = assetList;
+    }
+
     getExpiration() {
         return this.expiration;
     }

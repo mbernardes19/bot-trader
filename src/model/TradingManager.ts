@@ -2,6 +2,7 @@ import SignalRunner, { OperationResult, OperationSummary } from "./SignalRunner"
 import DerivClient from "./DerivClient";
 import Signal from "./Signal";
 import Logger from "../service/Logger";
+import DefaultStrategy from "./DefaultStrategy";
 
 export default class TradingManager {
     private _signalRunner: SignalRunner;
@@ -10,8 +11,12 @@ export default class TradingManager {
     constructor(signalRunner?: SignalRunner) {
         signalRunner ?
             this._signalRunner = signalRunner :
-            this._signalRunner = new SignalRunner(new DerivClient());
+            this._signalRunner = new SignalRunner(new DerivClient(), new DefaultStrategy());
         this._try = 0;
+    }
+
+    async validateSignal(signal: Signal) {
+        return await this._signalRunner.validate(signal);
     }
 
     async runSignal(signal: Signal): Promise<OperationResult> {

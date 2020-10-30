@@ -123,4 +123,8 @@ describe('TradingManager', () => {
         expect(operationResult.results[0].result).toBe('WIN')
     })
 
+    it('should check if signal is respecting trading strategy', () => {
+        
+    })
+
 });

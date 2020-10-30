@@ -5,6 +5,7 @@ export enum Action {
 export interface Asset {
     pair: string;
     action: Action;
+    inStrategy?: boolean;
 }
 
 export interface SignalData {

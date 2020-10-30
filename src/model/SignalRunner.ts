@@ -4,6 +4,7 @@ import Logger from '../service/Logger';
 import TradingClient from "./TradingClient";
 import { Asset } from "./interfaces/SignalData";
 import { Timebox } from "./interfaces/Timebox";
+import TradingStrategy from "./TradingStrategy";
 
 export type Operation = {
     candleDifference: CandleDifference,
@@ -36,10 +37,12 @@ export type OperationResult = {
 
 export default class SignalRunner {
     private _tradingClient: TradingClient;
+    private _strategy: TradingStrategy;
     private delay;
 
-    constructor(tradingClient: TradingClient, delayFunction?: (n) => void) {
+    constructor(tradingClient: TradingClient, strategy?: TradingStrategy, delayFunction?: (n) => void) {
         this._tradingClient = tradingClient;
+        this._strategy = strategy;
         delayFunction ?
             this.delay = delayFunction :
             this.delay = (n) => {
@@ -52,6 +55,10 @@ export default class SignalRunner {
             };
     }
 
+    async validate(signal: Signal): Promise<Signal> {
+        return await this._strategy.validate(this._tradingClient, signal)
+    }
+
     async run(signal: Signal): Promise<OperationSummary> {
         Logger.info(`Running signal:`, signal);
         const assetsOperations: Promise<Operation>[] = [];
@@ -60,6 +67,8 @@ export default class SignalRunner {
         })
         const operations = await Promise.all(assetsOperations)
         Logger.info(`Operation summary:`, {operations, telegramChannelId: signal.getTelegramChannelId(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale()});
+        console.log('OPERATIONS RETURNED FROM RUN METHOD')
+        operations.map(operation => Logger.info(operation))
         return {operations, telegramChannelId: signal.getTelegramChannelId(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale()}
     };
 
@@ -67,6 +76,9 @@ export default class SignalRunner {
         try {
             const isAssetAvailable = await this._tradingClient.checkAssetAvailability(asset.pair);
             if (isAssetAvailable) {
+                if (!asset.inStrategy) {
+                    return {candleDifference: { candleAfter: undefined, candleBefore: undefined }, asset}
+                }
                 Logger.info(`Running asset:`, asset);
                 const candleBefore = await this._tradingClient.getCurrentCandleFor(asset.pair, expiration);
                 Logger.info(`Waiting ${expiration/60} minute(s) to get last signal again`);
@@ -91,6 +103,7 @@ export default class SignalRunner {
 
     checkWin(operationSummary: OperationSummary): OperationResult {
         Logger.info(`Checking win for operation summary:`, operationSummary);
+        operationSummary.operations.map(operation => Logger.info(operation.asset))
         const results = operationSummary.operations.map(operation => this.getResult(operation))
         return { results, telegramChannelId: operationSummary.telegramChannelId, telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale }
     }
@@ -120,6 +133,9 @@ export default class SignalRunner {
                 }
             }
         } else {
+            if (!operation.asset.inStrategy) {
+                return { operation, result: 'NOT IN STRATEGY'}
+            }
             return { operation, result: '' }
         }
     }

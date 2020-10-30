@@ -31,7 +31,10 @@ app.post('/check-signal', (req: Request, res: Response) => {
     (async () => {
         const tradingManager = new TradingManager()
         try {
-            const operationResult = await tradingManager.runSignal(signal);
+            const validatedSignal = await tradingManager.validateSignal(signal);
+            console.log('SIGNAL', signal);
+            console.log('VALIDATED SIGNAL', validatedSignal)
+            const operationResult = await tradingManager.runSignal(validatedSignal);
             Logger.info(`Operation result:`, operationResult);
             Logger.info(`Sending operation result to Telegram Bot`);
             await requestService.post('/operation-result', operationResult);
