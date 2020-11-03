@@ -3,7 +3,7 @@
         "module": "commonjs",
         "esModuleInterop": true,
         "target": "es6",
-        "lib": ["ES2020.Promise"],
+        "lib": ["ES2020.Promise", "DOM"],
         "noImplicitAny": false,
         "allowJs": true,
         "moduleResolution": "node",

@@ -24,8 +24,7 @@ export default class RequestService {
             })
         } else {
             return axios.create({
-                // baseURL: 'http://metodosemprerico.kinghost.net:21539',
-                baseURL: 'http://localhost:6001/App',
+                baseURL: 'https://bot.sosvestibular.com/Teste',
                 headers: { 'Content-Type': 'application/json'}
             })
         }

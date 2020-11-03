@@ -23,6 +23,7 @@
     "node-cache": "^5.1.2"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/jest": "^26.0.14",
     "jest": "^26.4.2",
     "jest-mock-extended": "^1.0.10",
