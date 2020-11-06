@@ -7,7 +7,7 @@
     "test": "jest",
     "build": "tsc",
     "start": "rm -rf dist && tsc && NODE_ENV=production node -r dotenv/config dist/main.js",
-    "dev": "NODE_ENV=development ts-node -r dotenv/config ./src/main.ts"
+    "dev": "TZ='America/Sao_Paulo' NODE_ENV=development ts-node -r dotenv/config ./src/main.ts"
   },
   "keywords": [],
   "author": "",
