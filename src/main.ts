@@ -30,14 +30,7 @@ app.post('/check-signal', (req: Request, res: Response) => {
     (async () => {
         const tradingManager = new TradingManager()
         try {
-            let validatedSignal;
-            if (new Date().getHours() >= 12 && new Date().getHours() <= 15) {
-                validatedSignal = signal;
-                console.log('NO SIGNAL VALIDATION!')
-            } else {
-                validatedSignal = await tradingManager.validateSignal(signal);
-                console.log('WITH SIGNAL VALIDATION!')
-            }
+            const validatedSignal = await tradingManager.validateSignal(signal);
             console.log('SIGNAL', signal);
             console.log('VALIDATED SIGNAL', validatedSignal)
             const operationResult = await tradingManager.runSignal(validatedSignal);

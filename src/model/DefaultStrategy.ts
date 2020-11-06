@@ -12,6 +12,10 @@ export default class DefaultStrategy implements TradingStrategy {
     constructor() {}
 
     async validate(tradingClient: TradingClient, signal: Signal) {
+        if (new Date().getHours() >= 12 && new Date().getHours() <= 15) {
+            console.log('NO SIGNAL VALIDATION!')
+            return signal;
+        }
         const tradingRequests: Promise<Candle[]>[] = [];
         const assetsAvailabilityRequest: Promise<boolean>[] = [];
 
