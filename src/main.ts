@@ -3,15 +3,14 @@ dotenv.config();
 import express, {Request, Response} from 'express';
 import Signal from './model/Signal';
 import bodyParser from 'body-parser';
-import CacheService from './service/CacheService';
 import RequestService from './service/RequestService';
 import Logger from './service/Logger';
 import RequestParser from './service/RequestParser';
 import TradingManager from './model/TradingManager';
 
+
 const app = express();
 app.use(bodyParser.json())
-const cacheService = new CacheService();
 const requestService = new RequestService();
 
 app.post('/check-signal', (req: Request, res: Response) => {
@@ -31,7 +30,14 @@ app.post('/check-signal', (req: Request, res: Response) => {
     (async () => {
         const tradingManager = new TradingManager()
         try {
-            const validatedSignal = await tradingManager.validateSignal(signal);
+            let validatedSignal;
+            if (new Date().getHours() >= 12 && new Date().getHours() <= 15) {
+                validatedSignal = signal;
+                console.log('NO SIGNAL VALIDATION!')
+            } else {
+                validatedSignal = await tradingManager.validateSignal(signal);
+                console.log('WITH SIGNAL VALIDATION!')
+            }
             console.log('SIGNAL', signal);
             console.log('VALIDATED SIGNAL', validatedSignal)
             const operationResult = await tradingManager.runSignal(validatedSignal);
