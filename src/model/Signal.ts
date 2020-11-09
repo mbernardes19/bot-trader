@@ -8,12 +8,14 @@ export default class Signal {
     private telegramMessageId: number;
     private telegramChannelId: number;
     private gale: boolean;
+    private type: string;
 
     constructor(signalData: SignalData) {
         this.assetList = signalData.assetList;
         this.gale = signalData.gale;
         this.telegramChannelId = signalData.telegramChannelId;
         this.telegramMessageId = signalData.telegramMessageId;
+        this.type = signalData.type;
         try {
             this.expiration = this.expirationToTimebox(signalData.expiration);
             this.checkAssetList(this.assetList);
@@ -78,5 +80,9 @@ export default class Signal {
 
     hasGale() {
         return this.gale;
+    }
+
+    getType() {
+        return this.type;
     }
 }

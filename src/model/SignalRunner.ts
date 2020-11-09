@@ -20,7 +20,8 @@ export type OperationSummary = {
     operations: Operation[]
     telegramMessageId: number,
     telegramChannelId: number,
-    gale: boolean
+    gale: boolean,
+    type: string
 }
 
 export type Result = {
@@ -32,7 +33,8 @@ export type OperationResult = {
     results: Result[],
     telegramMessageId: number,
     telegramChannelId: number,
-    gale: boolean
+    gale: boolean,
+    type: string
 }
 
 export default class SignalRunner {
@@ -66,10 +68,10 @@ export default class SignalRunner {
             assetsOperations.push(this.runSignalAsset(asset, signal.getExpiration()))
         })
         const operations = await Promise.all(assetsOperations)
-        Logger.info(`Operation summary:`, {operations, telegramChannelId: signal.getTelegramChannelId(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale()});
+        Logger.info(`Operation summary:`, {operations, telegramChannelId: signal.getTelegramChannelId(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale(), type: signal.getType()});
         console.log('OPERATIONS RETURNED FROM RUN METHOD')
         operations.map(operation => Logger.info(operation))
-        return {operations, telegramChannelId: signal.getTelegramChannelId(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale()}
+        return {operations, telegramChannelId: signal.getTelegramChannelId(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale(), type: signal.getType()}
     };
 
     private async runSignalAsset(asset: Asset, expiration: Timebox): Promise<Operation> {
@@ -105,7 +107,7 @@ export default class SignalRunner {
         Logger.info(`Checking win for operation summary:`, operationSummary);
         operationSummary.operations.map(operation => Logger.info(operation.asset))
         const results = operationSummary.operations.map(operation => this.getResult(operation))
-        return { results, telegramChannelId: operationSummary.telegramChannelId, telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale }
+        return { results, telegramChannelId: operationSummary.telegramChannelId, telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale, type: operationSummary.type }
     }
 
     private getResult(operation: Operation): Result {
