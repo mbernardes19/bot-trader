@@ -16,6 +16,11 @@ export default class DefaultStrategy implements TradingStrategy {
             console.log('NO SIGNAL VALIDATION!')
             return signal;
         }
+
+        if (signal.getType() !== 'withoutGale') {
+            return signal;
+        }
+
         const tradingRequests: Promise<Candle[]>[] = [];
         const assetsAvailabilityRequest: Promise<boolean>[] = [];
 
