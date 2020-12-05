@@ -26,7 +26,8 @@ export type OperationSummary = {
 
 export type Result = {
     operation: Operation,
-    result: string
+    result: string,
+    galeNumber?: number,
 }
 
 export type OperationResult = {
@@ -103,35 +104,35 @@ export default class SignalRunner {
         this._tradingClient.closeConnection();
     }
 
-    checkWin(operationSummary: OperationSummary): OperationResult {
+    checkWin(operationSummary: OperationSummary, galeNumber?: number): OperationResult {
         Logger.info(`Checking win for operation summary:`, operationSummary);
         operationSummary.operations.map(operation => Logger.info(operation.asset))
-        const results = operationSummary.operations.map(operation => this.getResult(operation))
+        const results = operationSummary.operations.map(operation => galeNumber ? this.getResult(operation, galeNumber) : this.getResult(operation))
         return { results, telegramChannelId: operationSummary.telegramChannelId, telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale, type: operationSummary.type }
     }
 
-    private getResult(operation: Operation): Result {
+    private getResult(operation: Operation, galeNumber?: number): Result {
         if (operation.candleDifference.candleBefore && operation.candleDifference.candleAfter) {
             if (operation.asset.action.toLowerCase() === 'PUT'.toLowerCase()) {
                 if (operation.candleDifference.candleBefore.getOpenValue() > operation.candleDifference.candleAfter.getCloseValue()) {
-                    return { operation, result: 'WIN' };
+                    return  galeNumber ? { operation, result: 'WIN', galeNumber } : { operation, result: 'WIN' };
                 }
                 if (operation.candleDifference.candleBefore.getOpenValue() < operation.candleDifference.candleAfter.getCloseValue()) {
-                    return { operation, result: 'LOSS' };
+                    return galeNumber ? { operation, result: 'LOSS', galeNumber } : { operation, result: 'LOSS' };
                 }
                 if (operation.candleDifference.candleBefore.getOpenValue() === operation.candleDifference.candleAfter.getCloseValue()) {
-                    return { operation, result: 'DOJI' };
+                    return galeNumber ? { operation, result: 'DOJI', galeNumber } : { operation, result: 'DOJI' };
                 }
             }
             if (operation.asset.action.toLowerCase() === 'CALL'.toLowerCase()) {
                 if (operation.candleDifference.candleBefore.getOpenValue() < operation.candleDifference.candleAfter.getCloseValue()) {
-                    return { operation, result: 'WIN' };
+                    return galeNumber ? { operation, result: 'WIN', galeNumber } : { operation, result: 'WIN' };
                 }
                 if (operation.candleDifference.candleBefore.getOpenValue() > operation.candleDifference.candleAfter.getCloseValue()) {
-                    return { operation, result: 'LOSS' };
+                    return  galeNumber ? { operation, result: 'LOSS', galeNumber } : { operation, result: 'LOSS' };
                 }
                 if (operation.candleDifference.candleBefore.getOpenValue() === operation.candleDifference.candleAfter.getCloseValue()) {
-                    return { operation, result: 'DOJI' };
+                    return galeNumber ? { operation, result: 'DOJI', galeNumber } : { operation, result: 'DOJI' };
                 }
             }
         } else {

@@ -42,6 +42,6 @@ export default class TradingManager {
     }
 
     checkWinForOperation(operationSummary: OperationSummary): OperationResult {
-        return this._signalRunner.checkWin(operationSummary)
+        return this._signalRunner.checkWin(operationSummary, 1)
     }
 }
