@@ -8,6 +8,7 @@ import Logger from './service/Logger';
 import RequestParser from './service/RequestParser';
 import TradingManager from './model/TradingManager';
 import StorageService from './service/StorageService';
+import ScheduleService from './service/ScheduleService';
 
 
 const app = express();
@@ -22,6 +23,13 @@ const storageService = new StorageService();
         process.exit()
     }
 })()
+
+const scheduleService = new ScheduleService();
+scheduleService.schedule('00 17 * * 1-5', async () => {
+    const operationResults = await storageService.getAllOperationResults()
+    await requestService.post('/operation-result', operationResults);
+    await storageService.clearAllOperationResults();
+})
 
 
 

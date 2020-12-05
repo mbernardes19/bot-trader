@@ -15,8 +15,8 @@ export default class StorageService {
     }
 
     async getAllOperationResults() {
-        const collection = this._db.collection('signal_results')
-        return await collection.find();
+        const collection = this._db.collection<OperationResult>('signal_results')
+        return await collection.find().toArray();
     }
 
     async clearAllOperationResults() {
