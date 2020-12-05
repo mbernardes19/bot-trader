@@ -15,7 +15,12 @@ app.use(bodyParser.json())
 const requestService = new RequestService();
 const storageService = new StorageService();
 (async () => {
-    await storageService.connectToDb()
+    try {
+        await storageService.connectToDb()
+    } catch (err) {
+        Logger.error(`Failed to connect Storage Service to DB`, err)
+        process.exit()
+    }
 })()
 
 
