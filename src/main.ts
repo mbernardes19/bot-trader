@@ -7,11 +7,18 @@ import RequestService from './service/RequestService';
 import Logger from './service/Logger';
 import RequestParser from './service/RequestParser';
 import TradingManager from './model/TradingManager';
+import StorageService from './service/StorageService';
 
 
 const app = express();
 app.use(bodyParser.json())
 const requestService = new RequestService();
+const storageService = new StorageService();
+(async () => {
+    await storageService.connectToDb()
+})()
+
+
 
 app.post('/check-signal', (req: Request, res: Response) => {
     let signalData;
@@ -34,10 +41,14 @@ app.post('/check-signal', (req: Request, res: Response) => {
             console.log('SIGNAL', signal);
             console.log('VALIDATED SIGNAL', validatedSignal)
             const operationResult = await tradingManager.runSignal(validatedSignal);
-            Logger.info(`Operation result:`, operationResult);
-            Logger.info(`Sending operation result to Telegram Bot`);
-            await requestService.post('/operation-result', operationResult);
-            Logger.info(`Operation result sent and websocket connection closed`);
+            if (operationResult.type !== 'extraAnalysis') {
+                Logger.info(`Operation result:`, operationResult);
+                Logger.info(`Sending operation result to Telegram Bot`);
+                await requestService.post('/operation-result', operationResult);
+                Logger.info(`Operation result sent and websocket connection closed`);
+            } else {
+                await storageService.storeOperationResult(operationResult)
+            }
         } catch (err) {
             Logger.error(`An error occurred while checking signal ${JSON.stringify(req.body)}`, err)
         }
@@ -49,3 +60,5 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     app.listen(4000, () => Logger.info('Conectado na porta 4000'))
 }
+
+export default app;
