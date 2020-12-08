@@ -26,9 +26,14 @@ const storageService = new StorageService();
 
 const scheduleService = new ScheduleService();
 scheduleService.schedule('00 17 * * 1-5', async () => {
-    const operationResults = await storageService.getAllOperationResults()
-    await requestService.post('/operation-result', operationResults);
-    await storageService.clearAllOperationResults();
+    try {
+        const operationResults = await storageService.getAllOperationResults()
+        await requestService.post('/operation-result', operationResults);
+        await storageService.clearAllOperationResults();
+    } catch (err) {
+        console.log(err)
+    }
+
 })
 
 

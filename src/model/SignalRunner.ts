@@ -21,7 +21,8 @@ export type OperationSummary = {
     telegramMessageId: number,
     telegramChannelId: number,
     gale: boolean,
-    type: string
+    type: string,
+    time: string
 }
 
 export type Result = {
@@ -35,7 +36,8 @@ export type OperationResult = {
     telegramMessageId: number,
     telegramChannelId: number,
     gale: boolean,
-    type: string
+    type: string,
+    time: string
 }
 
 export default class SignalRunner {
@@ -72,7 +74,7 @@ export default class SignalRunner {
         Logger.info(`Operation summary:`, {operations, telegramChannelId: signal.getTelegramChannelId(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale(), type: signal.getType()});
         console.log('OPERATIONS RETURNED FROM RUN METHOD')
         operations.map(operation => Logger.info(operation))
-        return {operations, telegramChannelId: signal.getTelegramChannelId(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale(), type: signal.getType()}
+        return {operations, telegramChannelId: signal.getTelegramChannelId(), telegramMessageId: signal.getTelegramMessageId(), gale: signal.hasGale(), type: signal.getType(), time: signal.getTime()}
     };
 
     private async runSignalAsset(asset: Asset, expiration: Timebox): Promise<Operation> {
@@ -108,7 +110,7 @@ export default class SignalRunner {
         Logger.info(`Checking win for operation summary:`, operationSummary);
         operationSummary.operations.map(operation => Logger.info(operation.asset))
         const results = operationSummary.operations.map(operation => galeNumber ? this.getResult(operation, galeNumber) : this.getResult(operation))
-        return { results, telegramChannelId: operationSummary.telegramChannelId, telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale, type: operationSummary.type }
+        return { results, telegramChannelId: operationSummary.telegramChannelId, telegramMessageId: operationSummary.telegramMessageId, gale: operationSummary.gale, type: operationSummary.type, time: operationSummary.time }
     }
 
     private getResult(operation: Operation, galeNumber?: number): Result {
