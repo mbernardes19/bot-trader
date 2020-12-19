@@ -26,14 +26,15 @@ const storageService = new StorageService();
 
 const scheduleService = new ScheduleService();
 scheduleService.schedule('00 17 * * 1-5', async () => {
-    try {
-        const operationResults = await storageService.getAllOperationResults()
-        await requestService.post('/operation-result', operationResults);
-        await storageService.clearAllOperationResults();
-    } catch (err) {
-        console.log(err)
+    if (process.env.NODE_ENV === 'development') {
+        try {
+            const operationResults = await storageService.getAllOperationResults()
+            await requestService.post('/operation-result', operationResults);
+            await storageService.clearAllOperationResults();
+        } catch (err) {
+            console.log(err)
+        }       
     }
-
 })
 
 
