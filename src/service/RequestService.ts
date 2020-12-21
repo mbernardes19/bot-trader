@@ -19,12 +19,12 @@ export default class RequestService {
     private createBaseRequest(): AxiosInstance {
         if (process.env.NODE_ENV === 'production') {
             return axios.create({
-                baseURL: 'https://bot.sosvestibular.com/App/App',
+                baseURL: 'https://bot.sosvestibular.com//App',
                 headers: { 'Content-Type': 'application/json'}
             })
         } else {
             return axios.create({
-                baseURL: 'https://bot.sosvestibular.com/Teste/Teste',
+                baseURL: 'https://bot.sosvestibular.com//Teste',
                 headers: { 'Content-Type': 'application/json'}
             })
         }
