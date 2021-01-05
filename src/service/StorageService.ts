@@ -3,24 +3,27 @@ import { OperationResult } from '../model/SignalRunner';
 
 export default class StorageService {
     private _db: MongoClient.Db;
+    private _collection: MongoClient.Collection;
 
     async connectToDb() {
         const client = await MongoClient.connect(process.env.MONGO_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
         this._db = client.db('bot01');
+        if (process.env.NODE_ENV === 'production') {
+            this._collection = this._db.collection('signal_results');
+        } else {
+            this._collection = this._db.collection('signal_results_test');
+        }
     }
 
     async storeOperationResult(operationResult: OperationResult) {
-        const collection = this._db.collection('signal_results')
-        await collection.save(operationResult);
+        await this._collection.save(operationResult);
     }
 
     async getAllOperationResults() {
-        const collection = this._db.collection<OperationResult>('signal_results')
-        return await collection.find().toArray();
+        return await this._collection.find().toArray();
     }
 
     async clearAllOperationResults() {
-        const collection = this._db.collection('signal_results')
-        await collection.deleteMany({});
+        await this._collection.deleteMany({});
     }
 }
